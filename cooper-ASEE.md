@@ -31,8 +31,13 @@ __email:__ ryan.c.cooper@uconn.edu
 - Runner, bicyclist, and skateboarder
 <!-- #endregion -->
 
+```python tags=["remove_input"]
+from IPython.lib.display import YouTubeVideo
+YouTubeVideo('pvdID82aMEg')
+```
+
 # Accessing this presentation and \*more\*
-<img src="github-qr-annotate.png" align = "right" width = "200"/>
+<img src="github-qr.svg" align = "right" width = "200"/>
 
 - My website has Open Educational Resources: [cooperrc.github.io](https://cooperrc.github.io)
     - Join me, redistribute work, add suggestions
@@ -41,10 +46,6 @@ __email:__ ryan.c.cooper@uconn.edu
     - code to evaluate grades included
     - student data is not online (some info is PII)
 
-```python tags=["remove_input"]
-from IPython.lib.display import YouTubeVideo
-YouTubeVideo('pvdID82aMEg')
-```
 
 # What is Project/Problem-Based Learning
 
@@ -86,7 +87,7 @@ Students need to share results e.g. improve technical writing
 
 
 # Methods: Fall 2018 + Fall 2019 - ~Fall 2020~ 
-<img align="right" src = "./lab_schedule.svg" width = "500"/>
+<img align="right" src = "./lab_schedule.svg" width = "300"/>
 
 - 5 PBL labs with content in Jupyter (Labs 0-4)
 - 1 PjBL lab open-ended with definite goal Lab 5
@@ -99,6 +100,11 @@ Students need to share results e.g. improve technical writing
 - _I assumed_ improvements in technical writing scores are improvements in
   communication
 - _I feared_ students with \>70 on lab 0 would decrease scores
+
+
+
+# Methods: Fall 2018 + Fall 2019 - ~Fall 2020~ 
+<img align="center" src = "./lab_schedule.svg" width = "700"/>
 
 
 ```python tags=["remove_input"]
@@ -263,6 +269,114 @@ plt.tight_layout()
     - given access to experimental equipment from labs 0-4
     - given a small metal object
     - told to measure its mass with a vibrating cantilever beam
+- Below is reported error = (reported value - the actual value).
+- Error in mass reported in 
+    - Fall 2018: 18 ± 33 g
+    - Fall 2019: 11.4 ± 27 g
+    - actual objects: 32 ± 2 g
+
+```python tags=["remove_input"]
+# 2018 masses
+x=np.linspace(-20,100,50)
+
+tjm18=tjm=np.array([32.3280,
+  32.9222,
+  32.4845,
+  32.7656,
+  32.1623,
+  32.4566,
+  32.0418,
+  32.3890,
+  33.6936,
+  31.9106,
+  32.3104,
+  32.8166])
+
+data_contest=pd.read_csv('../track_progress/Mass Measurement Contest - Lab 5 Findings (Responses) - Form Responses 18.csv')
+data_contest=data_contest.dropna()
+serial_no=data_contest['What serial number did you measure (TJM 1-12)?']
+mass_meas=data_contest['What was its mass in grams?']
+SN = serial_no.dropna()
+SN = SN.values
+error=-(tjm[SN.astype(int)-1]-mass_meas)
+acc=abs(error).sort_values()
+i_win=acc.index.values
+sections=['Lab 001',
+'Lab 002',
+'Lab 003',
+'Lab 004',
+'Lab 005',
+'Lab 006',
+'Lab 007',
+'Lab 008',
+'Lab 009',
+'Lab 010',
+'Lab 011',
+'Lab 012',
+'Lab 013',
+'Lab 014']
+
+
+plt.hist(error,x,label='Fall 2018')
+
+# 2019 masses
+tjm19=tjm=np.array([28.491,
+  30.156,
+  31.453,
+  29.742,
+  32.666,
+  28.591,
+  29.348,
+  28.682,
+  32.141,
+  30.276,
+  31.143,
+  26.046])
+
+
+
+f='../track_progress/Mass Measurement Contest - Lab 5 Result and Methods (Responses) - Form Responses 19.csv'
+data_contest=pd.read_csv(f)
+data_contest=data_contest.dropna(subset=['What serial number did you measure (TJM 1-12)?'])
+serial_no=data_contest['What serial number did you measure (TJM 1-12)?'].values
+mass_meas=data_contest['What was its mass in grams?']
+error=-(tjm[serial_no.astype(int)-1]-mass_meas)
+data_contest['TJM ## mass (g)']=tjm[serial_no.astype(int)-1]
+data_contest['mass error']=error
+acc=abs(error).sort_values()
+i_win=acc.index.values
+
+
+
+plt.hist(error,x,label='Fall 2019',histtype='step',linewidth=5)
+
+
+
+
+#plt.hist(tjm19-np.mean(tjm19),x/2)
+#plt.hist(tjm18-np.mean(tjm18),x/2)
+plt.xlabel('error in mass (g)')
+plt.ylabel('counts')
+plt.xlim(-30,30)
+plt.legend(loc='upper left');
+plt.tight_layout()
+plt.savefig('mass_measure.png')
+```
+
+# Student preparedness
+
+- polled the 2019-2020 senior capstone teams 
+- Students’ comments:
+    - “Was a great and helpful class”
+    - “Great class! Very helpful for senior design”,
+    - “ME3263 was a great course for technical writing.” 
+- Students asked how useful each skill
+- Over 50% of the class of 270, agreed that all eight skills were useful 
+- 50% of the class considered technical writing to be a crucial skill
+- Fall 2018 and Fall 2019, over 45% felt prepared
+- students hadn’t taken the course less than 30% felt prepared
+- statistically significant difference between preparedness that took the PjBL course and those that did not. This measurement
+
 
 ```python tags=["remove_input"]
 prep = pd.read_csv('../track_progress/me3263_prepare.csv')
@@ -281,7 +395,7 @@ plt.tight_layout()
 ```
 
 # Conclusions
-<img src="github-qr-annotate.png" align = "right" width = "200"/>
+<img src="github-qr.svg" align = "right" width = "200"/>
 
 - Students need opportunities for PBL and PjBL in every class
     - it improves tech writing
@@ -293,6 +407,7 @@ plt.tight_layout()
 - Critera-based grading is first step to _my ungrading journey_
     - \>80% of students liked the system
     - the failing cases were a mix of apathetic and enraged
+
 
 # Lessons learned
 
@@ -306,7 +421,7 @@ plt.tight_layout()
 
 
 # Future work
-<img src="github-qr-annotate.png" align = "right" width = "200"/>
+<img src="github-qr.svg" align = "right" width = "200"/>
 
 - Criteria-based grading is my first step towards _ungrading_
 - My classes _based upon this work_ have moved to unlimited revisions _no tokens or P/F_
@@ -318,4 +433,4 @@ plt.tight_layout()
 
 
 # Question + Discussions? 
-<img src="github-qr-annotate.png" align = "center" width = "700"/>
+<img src="github-qr.svg" align = "center" width = "700"/>
